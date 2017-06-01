@@ -181,16 +181,43 @@ RUN set -ex \
 		echo 'listen = [::]:9000'; \
 	} | tee php-fpm.d/zz-docker.conf
 
-RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev libmcrypt-dev \
- && docker-php-ext-install mcrypt bcmath mysqli pdo_mysql mbstring ftp soap zip intl xsl \ 
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev libmcrypt-dev curl-dev libxml2-dev icu-dev libxslt-dev \
  && docker-php-ext-configure gd \
     --with-gd \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
- && docker-php-ext-install -j${NPROC} gd \
- && apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
+ && docker-php-ext-install -j${NPROC} gd mcrypt bcmath mysqli pdo_mysql soap zip intl xsl \
+ && apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev curl-dev libxml2-dev icu-dev libxslt-dev
+
+RUN apk add --no-cache libxslt icu libxml2 libmcrypt
+
+# Install Magerun2
+RUN wget -nv http://files.magerun.net/n98-magerun2.phar -O /usr/local/bin/n98-magerun2 \
+    && chmod +x /usr/local/bin/n98-magerun2 \
+    && ln -s /usr/local/bin/n98-magerun2 /usr/local/bin/magerun2
+
+# Install composer
+RUN wget -nv http://getcomposer.org/installer -O /tmp/composer-setup.php \
+    && php /tmp/composer-setup.php --quiet --install-dir=/usr/local/bin --filename=composer \
+    && rm /tmp/composer-setup.php
+
+# Copy config files
+COPY conf/php-fpm.conf /usr/local/etc/
+COPY conf/php.ini /usr/local/etc/php/
+
+# Enable PHP cli
+RUN chmod ugo+rX -R /usr/local/etc/php
+
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=app --with-fpm-group=app
+
+# ensure app user exists
+RUN set -x \
+	&& addgroup -g 1000 -S app \
+	&& adduser -u 1000 -D -S -G app -h /data -s /bin/bash app 
+
+WORKDIR /data
 
 EXPOSE 9000
 CMD ["php-fpm"]
