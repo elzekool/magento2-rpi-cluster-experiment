@@ -1,4 +1,4 @@
-FROM hypriot/rpi-alpine
+FROM hypriot/rpi-alpine:3.5
 MAINTAINER Magento2 Boys
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added

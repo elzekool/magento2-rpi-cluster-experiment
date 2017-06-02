@@ -1,4 +1,4 @@
-FROM hypriot/rpi-alpine
+FROM hypriot/rpi-alpine:3.5
 MAINTAINER Magento 2 Boys
 
 RUN apk update \

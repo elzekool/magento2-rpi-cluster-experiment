@@ -1,4 +1,4 @@
-FROM hypriot/rpi-alpine
+FROM hypriot/rpi-alpine:3.5
 MAINTAINER Magento2 Boys
 
 ENV NGINX_VERSION 1.13.1
