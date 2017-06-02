@@ -191,6 +191,16 @@ RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev lib
  && docker-php-ext-install -j${NPROC} gd mcrypt bcmath mysqli pdo_mysql soap zip intl xsl \
  && apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev curl-dev libxml2-dev icu-dev libxslt-dev
 
+ENV PHPREDIS_VERSION 3.0.0
+
+RUN docker-php-source extract \
+    && curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz \
+    && tar xfz /tmp/redis.tar.gz \
+    && rm -r /tmp/redis.tar.gz \
+    && mv phpredis-$PHPREDIS_VERSION /usr/src/php/ext/redis \
+    && docker-php-ext-install redis \
+    && docker-php-source delete
+
 RUN apk add --no-cache libxslt icu libxml2 libmcrypt
 
 # Install Magerun2
@@ -215,7 +225,7 @@ ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=app --with-fpm-group=a
 # ensure app user exists
 RUN set -x \
 	&& addgroup -g 1000 -S app \
-	&& adduser -u 1000 -D -S -G app -h /data -s /bin/bash app 
+	&& adduser -u 1000 -D -S -G app -h /data -s /bin/bash app
 
 WORKDIR /data
 
