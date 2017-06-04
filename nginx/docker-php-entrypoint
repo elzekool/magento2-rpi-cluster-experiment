@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Set upstream
+sed -i "s/###UPSTREAM###/$PHPFPM_UPSTREAM/" /etc/nginx/conf.d/magento2.conf
+
+exec "$@"

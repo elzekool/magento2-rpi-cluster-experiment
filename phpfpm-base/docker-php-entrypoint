@@ -1,9 +1,6 @@
 #!/bin/sh
 set -e
 
-# Update magento env.php
-/usr/local/bin/php /usr/local/bin/update-env.php
-
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- php-fpm "$@"

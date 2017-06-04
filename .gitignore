@@ -1,0 +1,12 @@
+/magento2/env
+/magento2/build/*
+!/magento2/build/.gitkeep
+
+/dynamic/*
+!/dynamic/.gitkeep
+!/dynamic/README.md
+
+/nginx/magento2
+
+/phpfpm/Dockerfile
+/phpfpm/magento2

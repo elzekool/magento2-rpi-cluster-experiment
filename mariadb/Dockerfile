@@ -14,6 +14,8 @@ RUN sed -Ei 's/^(bind-address|log)/#&/' /etc/mysql/my.cnf \
   && echo -e 'skip-host-cache\nskip-name-resolve' | awk '{ print } $1 == "[mysqld]" && c == 0 { c = 1; system("cat") }' /etc/mysql/my.cnf > /tmp/my.cnf \
   && mv /tmp/my.cnf /etc/mysql/my.cnf
 
+RUN apk add tzdata
+
 RUN rm -rf /tmp/src
 RUN rm -rf /var/cache/apk/*
 

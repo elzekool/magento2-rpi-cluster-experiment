@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
-exec bash -c \
-  "exec varnishd -F -u varnish \
-  -f $VCL_CONFIG \
+# Set backend
+sed -i "s/###BACKEND_HOST###/$BACKEND_HOST/" /etc/varnish/default.vcl
+sed -i "s/###BACKEND_PORT###/$BACKEND_PORT/" /etc/varnish/default.vcl
+
+exec sh -c \
+  "exec varnishd -F \
+  -f /etc/varnish/default.vcl \
   -s malloc,$CACHE_SIZE \
   $VARNISHD_PARAMS"
-
-

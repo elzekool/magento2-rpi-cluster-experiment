@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  php:
+    image: 'magento2-rpi/phpfpm-base:${GIT_REF}'
+    volumes:
+      - './build:/data/build'
+      - './build.sh:/data/build.sh'
+    env_file:
+      - ./env
+    networks:
+      - app
+  mariadb:
+    image: 'magento2-rpi/mariadb:${GIT_REF}'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'magento2'
+      MYSQL_DATABASE: 'magento2'
+    volumes:
+      - 'mysql:/var/lib/mysql'
+    networks:
+      - app
+
+volumes:
+  mysql: {}
+
+networks:
+  app: {}

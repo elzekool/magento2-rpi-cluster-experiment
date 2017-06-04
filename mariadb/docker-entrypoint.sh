@@ -37,7 +37,6 @@ if [ ! -d "$DATA_DIR/mysql" ]; then
   fi
 
   if [ -z "$MYSQL_INITDB_SKIP_TZINFO" ]; then
-    apk add --update-cache tzdata
     # sed is for https://bugs.mysql.com/bug.php?id=20545
     mysql_tzinfo_to_sql /usr/share/zoneinfo | sed 's/Local time zone must be set--see zic manual page/FCTY/' | mysql $mysql_options mysql
   fi

@@ -1,4 +1,4 @@
-FROM magento2-rpi/phpfpm-base:60a197a
+FROM magento2-rpi/phpfpm-base:###GIT_REF###
 MAINTAINER Magento2 Boys
 
 COPY magento2 /var/www/magento2
